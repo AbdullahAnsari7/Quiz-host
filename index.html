@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧠 Daily Islamic Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #fff8e1, #fff);
+      color: #3a2e1f;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .quiz-title {
+      text-align: center;
+      font-size: 24px;
+      color: #996515;
+      margin-bottom: 20px;
+    }
+
+    .quiz-card {
+      background-color: #fff8dc;
+      border-left: 5px solid #d4a017;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .question {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .option {
+      background-color: #f9f2d6;
+      border: 1px solid #e6d49d;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .option:hover {
+      background-color: #fff1bb;
+    }
+
+    .option.correct {
+      background-color: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+
+    .option.wrong {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+
+    .score-message {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #fff8dc;
+      border-radius: 10px;
+      border-left: 5px solid #d4a017;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-title">🧠 Daily Islamic Quiz</div>
+
+  <!-- QUIZ START -->
+  <div id="quiz-container"></div>
+
+  <div id="score-message" class="score-message" style="display:none;"></div>
+
+  <script>
+    const questions = [
+      {
+        question: "1. What direction do Muslims face during Salah?",
+        options: ["Kaaba (Makkah)", "Madina", "Jerusalem"],
+        answer: "Kaaba (Makkah)"
+      },
+      {
+        question: "2. What is the name of the first Surah in the Qur'an?",
+        options: ["Al-Fatiha", "Al-Baqarah", "An-Nas"],
+        answer: "Al-Fatiha"
+      },
+      {
+        question: "3. Who was the first Prophet in Islam?",
+        options: ["Prophet Adam (A.S)", "Prophet Nuh (A.S)", "Prophet Ibrahim (A.S)"],
+        answer: "Prophet Adam (A.S)"
+      },
+      {
+        question: "4. What does SubhanAllah mean?",
+        options: ["Allah is Great", "All Praise is to Allah", "Glory be to Allah"],
+        answer: "Glory be to Allah"
+      },
+      {
+        question: "5. How many daily prayers are obligatory in Islam?",
+        options: ["4", "5", "6"],
+        answer: "5"
+      }
+    ];
+
+    let score = 0;
+    let answered = 0;
+
+    const container = document.getElementById('quiz-container');
+
+    questions.forEach((q, idx) => {
+      const card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.setAttribute('data-answered', 'false');
+
+      const question = document.createElement('div');
+      question.className = 'question';
+      question.innerText = q.question;
+
+      card.appendChild(question);
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('div');
+        btn.className = 'option';
+        btn.innerText = opt;
+
+        btn.addEventListener('click', function () {
+          if (card.getAttribute('data-answered') === 'true') return;
+
+          card.setAttribute('data-answered', 'true');
+          const allOptions = card.querySelectorAll('.option');
+
+          allOptions.forEach(o => {
+            if (o.innerText === q.answer) {
+              o.classList.add('correct');
+            } else if (o !== btn) {
+              o.style.opacity = "0.7";
+            }
+          });
+
+          if (btn.innerText === q.answer) {
+            btn.classList.add('correct');
+            score++;
+          } else {
+            btn.classList.add('wrong');
+          }
+
+          answered++;
+          if (answered === questions.length) {
+            showScore();
+          }
+        });
+
+        card.appendChild(btn);
+      });
+
+      container.appendChild(card);
+    });
+
+    function showScore() {
+      const msg = document.getElementById('score-message');
+      let result = `You got ${score} out of ${questions.length} correct. `;
+
+      if (score === 5) {
+        result += "Masha'Allah! You nailed it 💯";
+      } else if (score >= 3) {
+        result += "Nice Attempt!";
+      } else if (score >= 1) {
+        result += "Nice! But you can do better.";
+      } else {
+        result += "Oh snap! Try again tomorrow.";
+      }
+
+      msg.innerText = result;
+      msg.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
